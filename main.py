@@ -62,7 +62,7 @@ async def admin_panel(message: types.Message):
         await message.answer(f"📊 Statistika:\nJami foydalanuvchilar: {count}")
 
 @dp.callback_query(F.data == "ref_info")
-async def ref_handler(call: types.Callback_query):
+async def ref_handler(call: types.CallbackQuery):
     link = f"https://t.me/ManaUCBot?start={call.from_user.id}"
     await call.message.answer(f"Sizning taklif havolangiz:\n{link}\nHar bir do'stingiz uchun 5000 UC oling!")
 
