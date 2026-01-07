@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PUBG UC Clicker</title>
+    <title>Mana UC Bot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-gold: #facc15;
-            --bg-dark: #0f172a;
-            --coin-glow: rgba(250, 204, 21, 0.4);
+            --neon-gold: #facc15;
+            --neon-blue: #3b82f6;
+            --bg-dark: #020617;
+            --card-bg: rgba(30, 41, 59, 0.7);
         }
 
         body {
-            background: radial-gradient(circle at center, #1e3a8a 0%, #0f172a 100%);
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 50% 10%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(250, 204, 21, 0.05) 0%, transparent 50%);
             color: white;
             text-align: center;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -28,163 +33,194 @@
             -webkit-user-select: none;
         }
 
+        .header {
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 0;
+            font-weight: bold;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
         #score-container {
-            margin-top: 50px;
-            font-size: 55px;
+            margin-top: 15px;
+            font-size: 60px;
             font-weight: 900;
-            color: var(--primary-gold);
-            text-shadow: 0 0 20px rgba(250, 204, 21, 0.6);
+            color: var(--neon-gold);
+            text-shadow: 0 0 30px rgba(250, 204, 21, 0.5);
             display: flex;
             align-items: center;
-            gap: 15px;
-        }
-
-        /* Tepadagi ball animatsiyasi */
-        .score-up {
-            animation: pulse 0.1s ease-in-out;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            gap: 12px;
         }
 
         #coin-container {
-            position: relative;
-            margin-top: auto;
-            margin-bottom: auto;
+            flex-grow: 1;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
+            width: 100%;
         }
 
-        /* Oltin tanga dizayni */
         #coin-btn {
-            width: 280px;
-            height: 280px;
+            width: 260px;
+            height: 260px;
             border-radius: 50%;
-            background: linear-gradient(145deg, #eab308, #ca8a04);
-            border: 10px solid #fef08a;
-            box-shadow: 0 0 50px var(--coin-glow), inset 0 0 30px rgba(0,0,0,0.2);
+            background: radial-gradient(circle, #facc15 0%, #ca8a04 100%);
+            border: 8px solid rgba(254, 240, 138, 0.3);
+            box-shadow: 0 0 60px rgba(234, 179, 8, 0.3), inset 0 0 40px rgba(0,0,0,0.4);
             cursor: pointer;
-            outline: none;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.05s cubic-bezier(0.1, 0.7, 1.0, 0.1);
-            position: relative;
+            transition: transform 0.05s cubic-bezier(0, 0, 0.2, 1);
             -webkit-tap-highlight-color: transparent;
+            position: relative;
+            z-index: 5;
         }
 
-        /* Tanga ustidagi UC yozuvi */
-        #coin-btn::before {
+        #coin-btn::after {
             content: "UC";
-            font-size: 100px;
+            font-size: 80px;
             font-weight: 900;
-            color: #fef08a;
-            text-shadow: 4px 4px 0px #854d0e;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 2px 4px 10px rgba(0,0,0,0.4);
         }
 
         #coin-btn:active {
             transform: scale(0.92) rotate(2deg);
         }
 
-        /* Tap qilganda chiqadigan +1 animatsiyasi */
         .tap-ani {
             position: absolute;
-            color: var(--primary-gold);
-            font-size: 32px;
+            color: var(--neon-gold);
+            font-size: 38px;
             font-weight: 900;
             pointer-events: none;
-            z-index: 100;
             animation: floatUp 0.7s ease-out forwards;
-            text-shadow: 0 0 10px black;
+            text-shadow: 0 0 15px rgba(250, 204, 21, 0.8), 2px 2px 5px black;
+            z-index: 10;
         }
 
         @keyframes floatUp {
             0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-180px) scale(1.5); opacity: 0; }
+            100% { transform: translateY(-220px) scale(1.3); opacity: 0; }
         }
 
-        .footer-btns {
-            width: 90%;
-            padding-bottom: 40px;
+        .nav-bar {
+            width: 95%;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            margin-bottom: 25px;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.5);
+        }
+
+        .nav-item {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-        }
-
-        .btn {
-            background: linear-gradient(to right, #2563eb, #1d4ed8);
-            color: white;
-            border: none;
-            padding: 18px;
-            border-radius: 16px;
-            font-size: 20px;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            cursor: pointer;
+            align-items: center;
+            gap: 5px;
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 600;
+            flex: 1;
             transition: 0.3s;
         }
 
-        .btn:active {
-            transform: translateY(2px);
-            filter: brightness(1.2);
-        }
+        .nav-item i { font-size: 22px; color: white; transition: 0.3s; }
+        .nav-item.active { color: var(--neon-gold); }
+        .nav-item.active i { color: var(--neon-gold); filter: drop-shadow(0 0 8px var(--neon-gold)); }
 
         .btn-withdraw {
-            background: linear-gradient(to right, #eab308, #ca8a04);
+            width: 90%;
+            background: linear-gradient(90deg, #f59e0b, #d97706);
             color: #451a03;
+            border: none;
+            padding: 15px;
+            border-radius: 16px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+            cursor: pointer;
         }
+
+        .btn-withdraw:active { transform: scale(0.98); opacity: 0.9; }
     </style>
 </head>
 <body>
 
+    <div class="header">
+        <span><i class="fas fa-bolt" style="color: #facc15;"></i> 1000 / 1000</span>
+        <span>BRONZE LEVEL <i class="fas fa-chevron-right" style="font-size: 10px;"></i></span>
+    </div>
+
     <div id="score-container">
         <span id="balance">0</span>
-        <span style="font-size: 25px;">UC</span>
+        <span style="font-size: 22px; color: #94a3b8; font-weight: 600;">UC</span>
     </div>
     
     <div id="coin-container">
-        <button id="coin-btn"></button>
+        <div id="coin-btn"></div>
     </div>
 
-    <div class="footer-btns">
-        <button class="btn btn-withdraw" onclick="withdraw()">📥 Yechib olish (Min: 60K)</button>
-        <button class="btn" onclick="tg.showAlert('Tez kunda referal tizimi qo\'shiladi!')">👥 Do'stlarni taklif qilish</button>
-    </div>
+    <button class="btn-withdraw" onclick="withdraw()">
+        <i class="fas fa-wallet" style="margin-right: 8px;"></i> Yechib olish
+    </button>
+
+    <nav class="nav-bar">
+        <div class="nav-item active">
+            <i class="fas fa-hand-pointer"></i>
+            <span>TAP</span>
+        </div>
+        <div class="nav-item" onclick="tg.showAlert('Vazifalar bo\'limi tez kunda ishga tushadi!')">
+            <i class="fas fa-tasks"></i>
+            <span>VAZIFALAR</span>
+        </div>
+        <div class="nav-item" onclick="showReferral()">
+            <i class="fas fa-users"></i>
+            <span>DO'STLAR</span>
+        </div>
+        <div class="nav-item" onclick="tg.showAlert('Sizning Telegram ID: ' + userId)">
+            <i class="fas fa-user-circle"></i>
+            <span>PROFIL</span>
+        </div>
+    </nav>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.enableClosingConfirmation();
-
+        
         let balance = 0;
-        let userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 12345;
+        let userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : "000000";
         let pendingPoints = 0;
-
-        // BU YERGA RENDERDAN OLGAN LINKNI QO'YASIZ
         const SERVER_URL = "https://bottapp-59h7.onrender.com";
 
         const balanceEl = document.getElementById('balance');
         const coinBtn = document.getElementById('coin-btn');
 
+        // Click hodisasi
         coinBtn.addEventListener('click', (e) => {
-            // Ballni oshirish
             balance++;
             pendingPoints++;
             balanceEl.innerText = balance.toLocaleString();
-
-            // Ballga pulsatsiya berish
-            balanceEl.classList.remove('score-up');
-            void balanceEl.offsetWidth; // Reflow
-            balanceEl.classList.add('score-up');
-
-            // +1 Animatsiyasi
+            
+            // Effekt yaratish
             createTapEffect(e);
-
-            // Har 10 ta tapda serverga yuborish
+            
+            // Vibratsiya (Haptic)
+            tg.HapticFeedback.impactOccurred('medium');
+            
+            // Har 10 ta bosishda serverga yuborish
             if (pendingPoints >= 10) {
                 saveData();
             }
@@ -195,45 +231,70 @@
             ani.innerText = '+1';
             ani.className = 'tap-ani';
             
-            // Touch yoki Click koordinatalari
+            // Koordinatalarni olish (Mobile va Desktop uchun)
             const x = e.clientX || (e.touches && e.touches[0].clientX);
             const y = e.clientY || (e.touches && e.touches[0].clientY);
             
-            ani.style.left = x + 'px';
-            ani.style.top = y + 'px';
+            ani.style.left = (x - 20) + 'px';
+            ani.style.top = (y - 40) + 'px';
+            
             document.body.appendChild(ani);
-            setTimeout(() => ani.remove(), 700);
+            
+            // Animatsiya tugagach elementni o'chirish
+            setTimeout(() => {
+                ani.remove();
+            }, 700);
         }
 
         async function saveData() {
-            if (!SERVER_URL.includes("RENDER")) {
-                try {
-                    await fetch(`${SERVER_URL}/update_balance`, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ user_id: userId, points: pendingPoints })
-                    });
+            try {
+                const response = await fetch(`${SERVER_URL}/update_balance`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        points: pendingPoints
+                    })
+                });
+                if (response.ok) {
                     pendingPoints = 0;
-                } catch (err) {
-                    console.log("Serverga ulanishda xato:", err);
                 }
+            } catch (err) {
+                console.error("Ma'lumot saqlashda xato:", err);
             }
+        }
+
+        function showReferral() {
+            const link = `https://t.me/ManaUCBot?start=${userId}`;
+            tg.showPopup({
+                title: 'Do\'stlarni taklif qiling',
+                message: `Har bir chaqirilgan do'st uchun qo'shimcha UC oling!\n\nSizning havolangiz:\n${link}`,
+                buttons: [
+                    {id: 'copy', type: 'default', text: 'Yopish'}
+                ]
+            });
         }
 
         function withdraw() {
             if (balance < 60000) {
-                tg.showAlert(`UC yig'ishda davom eting!\nMinimal yechish: 60,000 UC\nSizda: ${balance} UC`);
+                tg.showAlert("Minimal yechib olish miqdori 60,000 UC. Hozircha sizda: " + balance.toLocaleString() + " UC");
             } else {
-                tg.showConfirm("Tabriklaymiz! Balansingiz yetarli. Adminga ariza yuboramizmi?", (ok) => {
-                    if(ok) tg.showAlert("Arizangiz qabul qilindi!");
+                tg.showConfirm("60,000 UC yechishga ariza berasizmi?", (confirmed) => {
+                    if (confirmed) {
+                        tg.showAlert("Arizangiz qabul qilindi. Admin 24 soat ichida tekshirib chiqadi!");
+                    }
                 });
             }
         }
 
-        // Haptics (Vibratsiya) - Telegramda ishlashi uchun
-        coinBtn.onclick = () => {
-            tg.HapticFeedback.impactOccurred('medium');
-        };
+        // Sahifa yopilishidan oldin oxirgi ballarni saqlash
+        window.addEventListener('beforeunload', () => {
+            if (pendingPoints > 0) {
+                saveData();
+            }
+        });
     </script>
 </body>
 </html>
