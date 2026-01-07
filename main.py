@@ -78,6 +78,14 @@ async def ref_handler(call: CallbackQuery):
 async def tasks_handler(call: CallbackQuery):
     await call.message.answer("Hozircha vazifalar yo'q.")
 
+@app.get("/get_balance")
+async def get_balance(user_id: int):
+    db = SessionLocal()
+    user = db.query(User).filter(User.user_id == user_id).first()
+    balance = user.balance if user else 0
+    db.close()
+    return {"balance": balance}
+
 @app.post("/update_balance")
 async def update_balance(request: Request):
     data = await request.json()
